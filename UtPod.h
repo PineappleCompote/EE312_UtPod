@@ -63,6 +63,12 @@ public:
 
     int removeSong(Song const &s);
 
+	/* FUNCTION - int getNumSongs
+ 	 * traverses through list and returns length of list
+ 	 */
+
+	int getNumSongs();
+
 
     /* FUNCTION - void shuffle
      *  shuffles the songs into random order
@@ -112,16 +118,13 @@ public:
 
     /* FUNCTION - int getTotalMemory
      *  returns the total amount of memory in the UtPod
-        o will do nothing if there are less than two songs in the current list
 
        input parms -
 
        output parms -
     */
 
-    int getTotalMemory() {
-        return memSize;
-    }
+    int getTotalMemory();
 
 
 
