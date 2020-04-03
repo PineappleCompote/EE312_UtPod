@@ -25,6 +25,12 @@ using namespace std;
         size = _size;
     }
 
+	Song::Song(const Song& old){
+		artist = old.artist;
+		title = old.title;
+		size = old.size;
+	}
+
     string Song::getTitle() const{
         return title;
     }
@@ -68,7 +74,7 @@ using namespace std;
     }
 
     bool Song::operator>(const Song &rhs) {
-        bool greater = false;
+         bool greater = false;
         if(artist > rhs.artist){
             greater = true;
         }
@@ -82,20 +88,13 @@ using namespace std;
                 }
             }
         }
-        return greater;
+        return greater; 
     }
 
     bool Song::operator==(const Song &rhs) {
-        if(artist == rhs.artist){
-            if(title == rhs.title){
-                if(size == rhs.size){
-                    return true;
-                }
-            }
-        }
-        else{
-            return false;
-        }
+		return (artist == rhs.artist &&
+				title == rhs.title &&
+				size == rhs.size);	
     }
 
     void Song::swap(Song &s) {
@@ -104,6 +103,15 @@ using namespace std;
         *this = temp;
     }
 
+	Song& Song::operator =(const Song &s){
+		if(this != &s){
+			artist = s.artist;
+			title = s.title;
+			size = s.size;
+		}
+	}
+
+	
     Song::~Song() {
-        cout << "Inside the destructor" << endl;
+        //cout << "Inside the destructor for " << title << endl;
     }

@@ -20,6 +20,7 @@ class Song {
         Song();
         Song(string title);
         Song(string artist, string title, int size);
+		Song(const Song& old);
 
         /* FUNCTION - string getTitle
          *  returns the title of the song
@@ -76,6 +77,10 @@ class Song {
          *  returns true if the song is before rhs alphabetically
          */
         bool operator <(Song const &rhs);
+
+	/* Copy assignment operator
+ 	 */
+	Song& operator =(Song const &s);
 
         ~Song();
 
