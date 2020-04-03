@@ -34,6 +34,10 @@ public:
     //set the size to MAX_MEMORY.
     UtPod(int size);
 
+	//Copy Constructor
+	//constructs a copy of UtPod passed by user
+	UtPod(const UtPod& old);
+
     /* FUNCTION - int addSong
      * attempts to add a new song to the UtPod
          o returns a 0 if successful
@@ -138,7 +142,16 @@ public:
 
     int getRemainingMemory();
 
+	/* Copy assignment operator
+ 	 * Makes current UtPod a copy of UtPod passed by user
+ 	 * All songs of current UtPod is deleted
+ 	 */
 
+	UtPod& operator =(UtPod const &p);
+
+	/* DESTRUCTOR - ~UtPod
+ 	 * Clears UtPod object
+ 	 */
     ~UtPod();
 
 };

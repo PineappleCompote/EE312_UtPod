@@ -172,26 +172,32 @@ int main(int argc, char *argv[])
 	int SONG_MEM = rand()% MAX_MEMORY + 1;
 	const int n2 = rand()%SONG_MEM + 1;
 	Song randList[MAX_MEMORY];
-	char artist[30];
-	char title[30]; 
+	string artist;
+	string title;
+	const int MAX_LEN = 10;
 	for(int i = 0; i < n2; i++){
-		int alen = rand() % 25;
-		int tlen = rand() % 25;
-		for(int j = 0; j < alen; j++)
-			artist[j] = rand() % ('z' - '0' + 1) + '0';
-		for(int j = alen; j < 30; j++)
-			artist[j] = ' ';
+		int alen = rand() % MAX_LEN;
+		int tlen = rand() % MAX_LEN;
 
+		artist = "";
+		for(int j = 0; j < alen; j++)	
+			artist += rand() % ('z' - '0' + 1) + '0';
+		for(int j = alen; j < MAX_LEN; j++)
+			artist += " ";
+
+		title = "";
 		for(int j = 0; j < tlen; j++)
-			title[j] = rand() % ('z' - '0' + 1) + '0';
-		for(int j = tlen; j < 30; j++)
-			title[j] = ' ';
-
+			title +=  rand() % ('z' - '0' + 1) + '0';
+		for(int j = tlen; j < MAX_LEN; j++)
+			title += " ";
 		int size = rand() % 30  + 1;
+
+		
 		Song s(artist, title, size);
 		randList[i] = s;
 	}
-	
+
+	//adding songs	
 	UtPod randT(SONG_MEM);
 	int remaining = SONG_MEM; //should track how much memory left in song
 	int count = 0;
@@ -201,9 +207,23 @@ int main(int argc, char *argv[])
 	cout << "total mem: " << randT.getTotalMemory() << endl;
 	cout << "Adding songs......................." << endl;
 	for(int i = 0; i < n2; i++){
-		if(remaining < randList[i].getSize())
-			cout << randList[i].getTitle() << " SHOULD FAIL.  need: "
-				<< randList[i].getSize() << "  has: " << remaining << endl;
+		//expensive mem check
+		int memleft = randT.getRemainingMemory();
+		if(memleft != remaining){
+			cout << "getRemainingMemory() failed.\n";
+			cout << "Function count: " << memleft;
+			cout << "real value: " << remaining<< endl;
+			break;
+		}
+
+		if(remaining < randList[i].getSize()){
+			cout << randList[i].getTitle() <<  " SHOULD FAIL.  need: "
+				<< + randList[i].getSize() << "  has: " << remaining << endl;
+			if(remaining == 0){
+				cout << "Memory full...exiting....\n";
+				break;
+			}
+		}
 
 		if(randT.addSong(randList[i]) == SUCCESS){
 			cout << randList[i].getTitle() << " added successfully\n";
