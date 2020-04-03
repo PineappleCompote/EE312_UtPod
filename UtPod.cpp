@@ -131,23 +131,33 @@ using namespace std;
 	void UtPod::sortSongList()
 	{
 		int numSongs = getNumSongs();
-		SongNode* iN = songs;
-		SongNode* jN; 	
-
-		for(int i = 1; i < numSongs; i++){
-			SongNode* min = iN;
-			jN = iN->next;
-			for(int j = i+1; j < numSongs; j++){
-				if(jN->s < min->s)
-					min = jN;	
-				jN = jN->next;
-			}
-
-			if(min != iN)
-				iN->s.swap(min->s);	
-			
-			iN = iN->next;
+		Song arr[numSongs];
+		SongNode* temp = songs;
+	
+		//make temporary list to sort easier
+		for(int i = 0; i < numSongs; i++){
+			arr[i] = temp->s;
+			temp = temp->next;
 		}
+
+		for(int i = 0; i < numSongs-1; i++){
+			int  min = i;
+			for(int j = i+1; j < numSongs; j++){
+				if(arr[j] < arr[min])
+					min = j;	
+			}	
+
+			if(min != i)
+				arr[i].swap(arr[min]);	
+		}
+
+		//now copy sorted list to UtPod
+		temp = songs;
+		for(int i = 0; i < numSongs; i++){
+			temp->s = arr[i];
+			temp = temp->next;
+		}
+	
 	}
 
 	void UtPod::clearMemory()
