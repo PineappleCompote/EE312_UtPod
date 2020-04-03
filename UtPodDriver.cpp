@@ -11,8 +11,13 @@ You will want to do more complete testing.
 */
 #include <cstdlib>
 #include <iostream>
+#include <time.h>
+#include <stdlib.h>
 #include "Song.h"
 #include "UtPod.h"
+
+#define MAX_MEMORY 512
+#define SUCCESS 0
 
 using namespace std;
 
@@ -162,4 +167,105 @@ int main(int argc, char *argv[])
     cout << endl;
 
 
+	//testing random songs
+	srand(time(0));
+	int SONG_MEM = rand()% MAX_MEMORY + 1;
+	const int n2 = rand()%SONG_MEM + 1;
+	Song randList[MAX_MEMORY];
+	char artist[30];
+	char title[30]; 
+	for(int i = 0; i < n2; i++){
+		int alen = rand() % 25;
+		int tlen = rand() % 25;
+		for(int j = 0; j < alen; j++)
+			artist[j] = rand() % ('z' - '0' + 1) + '0';
+		for(int j = alen; j < 30; j++)
+			artist[j] = ' ';
+
+		for(int j = 0; j < tlen; j++)
+			title[j] = rand() % ('z' - '0' + 1) + '0';
+		for(int j = tlen; j < 30; j++)
+			title[j] = ' ';
+
+		int size = rand() % 30  + 1;
+		Song s(artist, title, size);
+		randList[i] = s;
+	}
+	
+	UtPod randT(SONG_MEM);
+	int remaining = SONG_MEM; //should track how much memory left in song
+	int count = 0;
+	bool added[MAX_MEMORY];
+	for(int i = 0; i < n2; i++)
+		added[i] = false;
+	cout << "total mem: " << randT.getTotalMemory() << endl;
+	cout << "Adding songs......................." << endl;
+	for(int i = 0; i < n2; i++){
+		if(remaining < randList[i].getSize())
+			cout << randList[i].getTitle() << " SHOULD FAIL.  need: "
+				<< randList[i].getSize() << "  has: " << remaining << endl;
+
+		if(randT.addSong(randList[i]) == SUCCESS){
+			cout << randList[i].getTitle() << " added successfully\n";
+			remaining -= randList[i].getSize();
+			count++;
+			added[i] = true;	
+		}
+
+		else
+			cout << randList[i].getTitle() << " FAILED TO ADD\n";
+	}
+
+	cout << endl;
+	cout << "songs added: " << count << endl;
+	randT.showSongList();
+	
+	cout << endl << "Removing Songs.......................\n";
+	int numRemoved = 0;
+	int randRemove = rand() % count + 1;
+	for(int i = 0; i < randRemove; i++){
+		if(rand() % 4){
+			int removed;
+			do{
+				removed = rand() % n2;
+			}
+			while(!added[removed]);
+			cout << "Removing " << randList[removed].getTitle() << endl;
+			randT.removeSong(randList[removed]);
+			numRemoved ++;
+			added[removed] = false;
+		}
+
+		else{
+			cout << "SHOULD FAIL to remove " << "GARBAGE\n"; 
+			Song garbage("GARBAGE", "GARBAGE", 20);
+			if(randT.removeSong(garbage) == SUCCESS)
+				cout << "something went wrong";
+		}
+	}
+
+	count -= numRemoved;
+	cout << endl;
+	cout << "songs removed: " << numRemoved << endl;
+
+	randT.showSongList();
+
+	cout << endl;
+	cout << "Sorting............................\n";
+	randT.sortSongList();
+	randT.showSongList();
+
+
+	cout << endl;
+	cout << "Shuffling ..............................\n";
+	randT.shuffle();
+	randT.showSongList();
+
+	cout << endl;
+	cout << "Resorted................................\n";
+	randT.sortSongList();
+	randT.showSongList();
+
+	cout << endl;
+	
 }
